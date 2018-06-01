@@ -72,7 +72,7 @@ var paths = {
 
 /**
  * Watch scss files for changes & recompile
- * Watch html/md files, run jekyll & reload BrowserSync
+ * Watch html and js files, run jekyll & reload BrowserSync
  */
 gulp.task('watch', function () {
     gulp.watch(paths.scss, ['sass']);
