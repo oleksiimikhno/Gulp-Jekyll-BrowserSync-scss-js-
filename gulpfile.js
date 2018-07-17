@@ -4,6 +4,7 @@ var sass        = require('gulp-sass');
 var prefix      = require('gulp-autoprefixer');
 var cp          = require('child_process');
 
+
 var jekyll   = process.platform === 'win32' ? 'jekyll.bat' : 'jekyll';
 var messages = {
     jekyllBuild: '<span style="color: grey">Running:</span> $ jekyll build'
@@ -28,7 +29,7 @@ gulp.task('jekyll-rebuild', ['jekyll-build'], function () {
 /**
  * Wait for jekyll-build, then launch the Server
  */
-gulp.task('browser-sync', ['sass', 'jekyll-build', 'scripts'], function() {
+gulp.task('browser-sync', ['sass', 'jekyll-build'], function() {
     browserSync({
         server: {
             baseDir: ['_site']
@@ -51,33 +52,13 @@ gulp.task('sass', function () {
         .pipe(gulp.dest('css'));
 });
 
-
-/**
- * Compile files from assets/js/ into both _site/assets/js (for live injecting) and site (for future jekyll builds)
- */
-gulp.task('scripts', function(){
-  return gulp.src(paths.script)
-    .pipe(gulp.dest('_site/assets/js'))
-    .pipe(browserSync.reload({stream:true}));
-});
-
-/** 
- * Patchs for files HTML SCSS and JS 
-*/
-var paths = {
-    html:['*.html', '_layouts/*.html', '_includes/*.html', '_posts/*'],
-    scss:['_scss/*.scss', '_scss/**/*.scss'],
-    script:['assets/js/*.js']
-};
-
 /**
  * Watch scss files for changes & recompile
- * Watch html and js files, run jekyll & reload BrowserSync
+ * Watch html/md files, run jekyll & reload BrowserSync
  */
 gulp.task('watch', function () {
-    gulp.watch(paths.scss, ['sass']);
-    gulp.watch(paths.html, ['jekyll-rebuild']);
-    gulp.watch(paths.script, ['scripts']);
+    gulp.watch(['_scss/*.scss', '_scss/**/*.scss'], ['sass']);
+    gulp.watch(['*.html', '_layouts/*.html', '_includes/*.html', '_posts/*'], ['jekyll-rebuild']);
 });
 
 /**
